@@ -68,7 +68,7 @@ def countfiles(dictfiles, lsttokens, repo):
                     # Initilize each author's name to a empty dictionary
                     authorCount[author["name"]] = dict()
 
-                for idx, filenameObj in enumerate(filesjson):
+                for filenameObj in filesjson:
                     filename = filenameObj['filename']
 
                     # Due to the nature of this dictionary, we will have to access it a little wierdly
@@ -84,11 +84,6 @@ def countfiles(dictfiles, lsttokens, repo):
                         # print file name, author, as well as time for each file modified
                         print("File: %s\nAuthor: %s, committed: %s\n" % \
                              (filename, author["name"], pd.to_datetime(author["date"], utc = True)))
-                    
-                    if idx > 10:
-                        print("BREAKING")
-                        return       # DEBUG
-
             ipage += 1
     except Exception as e:
         print("Error receiving data")
