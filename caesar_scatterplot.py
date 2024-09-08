@@ -23,7 +23,7 @@ def plot_scatter(data, output_file):
     # Extract unique authors
     authors = list({row['Author'] for row in data})
     author_colors = {author: i for i, author in enumerate(authors)}
-    cmap = plt.get_cmap('tab10', len(authors))  
+    cmap = plt.get_cmap('tab20', len(authors))  # Use a distinct colormap with 20 distinct colors
 
     # Extract unique file names and assign them numbers for the x-axis
     file_names = list({row['Filename'] for row in data})
@@ -63,7 +63,7 @@ def plot_scatter(data, output_file):
     # Label the axes
     plt.xlabel('File Number (representing different files)')
     plt.ylabel('Weeks since project start')
-    plt.title('Weeks Vs File Variables')
+    plt.title('File Touches Over Time by Author')
 
     # Save plot as PNG file
     plt.tight_layout()
