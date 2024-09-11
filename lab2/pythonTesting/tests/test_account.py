@@ -110,8 +110,10 @@ def test_delete_and_find():
     data = ACCOUNT_DATA[rand]       # Get a random account
     account = Account(**data)
 
+    all_Accounts = Account.all()
+
     # Ensure that our found account is correct
-    assert None == Account.find(12345678)
+    assert None == Account.find(1)
 
     # A valid account is found. Delete it and ensure it's deleted
     try:
