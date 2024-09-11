@@ -4,6 +4,7 @@ Test Cases TestAccountModel
 import json
 from random import randrange
 import pytest
+import datetime
 from models import db, app
 from models.account import Account, DataValidationError
 
@@ -54,6 +55,8 @@ def test_repr():
     account.name = "Foo"
     assert str(account) == "<Account 'Foo'>"
 
+    account.create()
+
 def test_to_dict():
     """Test account to dict"""
     rand = randrange(0, len(ACCOUNT_DATA))      # Generate a random index
@@ -67,26 +70,32 @@ def test_to_dict():
     assert account.disabled == result["disabled"]
     assert account.date_joined == result["date_joined"]
 
+    account.create()
+
 def test_from_dict():
     rand = randrange(0, len(ACCOUNT_DATA))      # Generate a random index
     data = ACCOUNT_DATA[rand]       # Get a random account
     account = Account(**data)
 
+    now = datetime.datetime.now()
+
     dict = {
         'name' : 'account_Name',
         'email': 'account_Email',
         'phone_number' : '7021234567',
-        'disabled' : 'Maybe',
-        'date_joined' : 'Today'
+        'disabled' : True,
+        'date_joined' : now
     }
 
     account.from_dict(dict)
+    account.create()
 
     assert account.name == 'account_Name'
     assert account.email == 'account_Email'
     assert account.phone_number == '7021234567'
-    assert account.disabled == 'Maybe'
-    assert account.date_joined == 'Today'
+    assert account.disabled == True
+    assert account.date_joined == now
+
 
 def test_update():
     rand = randrange(0, len(ACCOUNT_DATA))      # Generate a random index
