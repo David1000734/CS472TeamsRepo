@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Test suite to confirm that {@link Unit}s correctly (de)occupy squares.
  *
- * @author Jeroen Roosen 
+ * @author Jeroen Roosen
  *
  */
 class OccupantTest {
