@@ -17,7 +17,7 @@ import java.util.*;
  *
  * @author Jeroen Roosen 
  */
-public class LevelFactory {
+public class    LevelFactory {
 
     private static final int GHOSTS = 4;
     private static final int BLINKY = 0;
