@@ -69,3 +69,16 @@ class TestCounterEndPoints:
         # This one must be 1 because it was incremented previously
         content = ast.literal_eval(result.data.decode('UTF-8'))
         assert 1 == content['count']
+
+    def test_delete_counter(self, client):
+        result = client.delete('/counters/nothingHere')
+        assert result.status_code == status.HTTP_404_NOT_FOUND
+
+        result = client.post('/counters/testCounter')
+        assert result.status_code == status.HTTP_201_CREATED
+
+        result = client.delete('/counters/testCounter')
+        assert result.status_code == status.HTTP_200_OK
+
+        result = client.get('/counters/testCounter')
+        assert result.status_code == status.HTTP_404_NOT_FOUND
