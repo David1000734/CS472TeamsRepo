@@ -9,11 +9,3 @@ jobs:
   build: 
     runs-on: ubuntu-latest
     container: python:3.9-slim
-  
-  steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
-      with:
-        node-version: 18
-      - run: npm ci
-
