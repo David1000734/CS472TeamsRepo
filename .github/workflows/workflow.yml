@@ -1,0 +1,19 @@
+on: push
+jobs:
+  first-job:
+    runs-on: windows-latest
+    steps:
+      - run: node --version
+      - run: npm --version
+
+
+name: CI workflow
+on: 
+  push:
+    ["main"]
+  pull_request:
+    ["main"]
+jobs: 
+build: 
+runs-on: ubuntu-latest
+container: python:3.9-slim
