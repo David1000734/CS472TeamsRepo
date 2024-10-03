@@ -45,23 +45,33 @@ public class LemonGrenade : MonoBehaviour
         currentDistance = Vector3.Distance(transform.position, targetlocation);
         playerDistance = Vector3.Distance(transform.position, player.transform.position);
 
+        // Increases the scale of the object at a continuous rate to a certain maximum for the first 25% of the path.
+
+        // Calculate the scaling factor based on currentDistance
         if (currentDistance > distance / 4)
         {
-            transform.localScale = new Vector3(transform.localScale.x + transform.localScale.x * scalingFactor * Time.deltaTime, transform.localScale.y + transform.localScale.y * scalingFactor * Time.deltaTime, transform.localScale.z + transform.localScale.z * scalingFactor * Time.deltaTime);
-            if (transform.localScale.x >= max && transform.localScale.y >= max)
+            float scaleIncrease = 1 + scalingFactor * Time.deltaTime;
+            transform.localScale *= scaleIncrease;
+        
+            // Clamp the scale to the maximum
+            if (transform.localScale.x >= max)
             {
-                transform.localScale = new Vector3(max, max, max);
+                transform.localScale = Vector3.one * max;
             }
-        } else if (currentDistance < distance - distance / 4)
+        }
+
+        // Decreases the scale of the object at a continuous rate to a certain minimum for the last 25% of the path.
+        
+        else if (currentDistance < distance - distance / 4)
         {
-            transform.localScale = new Vector3(transform.localScale.x + transform.localScale.x * scalingFactor * Time.deltaTime * -1, transform.localScale.y + transform.localScale.y * scalingFactor * Time.deltaTime * -1, transform.localScale.z + transform.localScale.z * scalingFactor * Time.deltaTime * -1);
-            if (transform.localScale.x <= min && transform.localScale.y <= min)
+            float scaleDecrease = 1 - scalingFactor * Time.deltaTime;
+            transform.localScale *= scaleDecrease;
+        
+            // Clamp the scale to the minimum
+            if (transform.localScale.x <= min)
             {
-                transform.localScale = new Vector3(min, min, min);
+                transform.localScale = Vector3.one * min;
             }
-        } else
-        {
-            transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
         }
         if(currentDistance <= 0)
         {
