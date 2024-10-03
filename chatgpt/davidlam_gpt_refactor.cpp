@@ -107,50 +107,38 @@ void sortgms(struct unigram uni[], int wordCount) {
 /// or numeric value
 ///
 /// @param word Array to be checked
-///
 /// @param wordCount Number of words in word array
 int cleanup(string word[], int wordCount) {
+    ofstream outFile("output.txt");  // Assuming this is defined earlier
 
-    // Loop through entire array to see if cleanup is neccessary
-    for (int idx = 0; idx < wordCount; idx++) {
-        // If edit is made, original string is saved
-        str = word[idx];
-        /// https://www.programiz.com/cpp-programming/
-        /// library-function/cctype/tolower
-        /// Where I found out about tolower
-        // For loop will change all letters into lowercase and erase
-        // unwanted characters
-        for (int i = 0; i < str.length(); i++) {
-            // 63 through 90 are all capital letters. If it is
-            // a capital letter, change to lower case
-            if ((64 < str[i]) && (str[i] < 91)) {
-                str[i] = tolower(str[i]);
-                editMade = true;
-            }    // if capital letters, END
-            // If char is not a number or letter, erase it
-            if ((!isalpha(str[i])) && (!isdigit(str[i]))) {
-                str.erase(str.begin() + i);
-                editMade = true;
-                // As to ensure when undesirable is erase, immediate
-                // char is not ignored. EX.  u.ELL
-                // without i--   output is uEll
-                i--;
-            }    // If non-alpha, END
-            if ((!isalpha(str[i])) && (isdigit(str[i]))) {
-                // if value is a digit, change to NONALPHA
-                // and close the loop
-                str = "NONALPHA";
-                i = 1000;      // Terminates loop
-                editMade = true;
+    for (int idx = 0; idx < wordCount; ++idx) {
+        string original = word[idx];
+        string cleaned;
+        bool hasDigit = false;
+
+        // Loop through each character in the word
+        for (char ch : original) {
+            if (isalpha(ch)) {
+                // Convert to lowercase if it's an alphabetic character
+                cleaned += tolower(ch);
+            } else if (isdigit(ch)) {
+                hasDigit = true;
+                break;  // Exit the loop if a digit is found
             }
-        }               // Inner for, END
-        if (editMade) {
-            // output unedited string first
-            outFile << word[idx] << setw(20) << "-->";
-            // output edited string
-            outFile << str << endl;
-            editMade = false;        // toggle
-            word[idx] = str;
-        }        // if editMade, END
-    }           // Outer for, END
+        }
+
+        // If a digit was found, replace the word with "NONALPHA"
+        if (hasDigit) {
+            cleaned = "NONALPHA";
+        }
+
+        // Output if any changes were made
+        if (cleaned != original) {
+            outFile << original << setw(20) << "--> " << cleaned << endl;
+            word[idx] = cleaned;
+        }
+    }
+
+    outFile.close();
+    return 0;  // Assuming a return value is needed
 }
