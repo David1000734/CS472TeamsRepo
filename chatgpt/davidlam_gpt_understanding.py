@@ -13,15 +13,27 @@ class Miscellaneous(commands.Cog):
         # Build the string for the bot to print it
         tempContent = msg.content
 
-        # Check every emoji in server.
+        # Iterate through all emojis available on the server
         for emoji in msg.guild.emojis:
-            # We will need to update the message as we do replacements
+            
+            # Keep a copy of the message content before making replacements.
+            # We will use this copy to make changes without affecting the original temporarily.
             currStr = tempContent
-            # Only do replacements if the emoji is animated
+            
+            # Proceed only if the current emoji is animated
             if emoji.animated:
-                # If it is animated, search for it in the message and replace
-                # it with the emoji equivilant. 
-                tempContent = re.sub(rf":({emoji.name}):", str(emoji), currStr)
+                
+                # Construct a regular expression pattern to search for the emoji name in the message.
+                # The pattern looks for the emoji name surrounded by colons like :emoji_name:
+                # For example, if the emoji's name is 'happy', it will search for ':happy:' in the message.
+                emoji_pattern = rf":({emoji.name}):"
+                
+                # Replace any occurrence of the emoji's text form (like ":happy:") with its actual emoji character.
+                # re.sub() function does this replacement:
+                # - First argument is the pattern we are searching for (emoji_pattern),
+                # - Second argument is the actual emoji object converted to string (str(emoji)),
+                # - Third argument is the string we are working on (currStr), which holds the current state of the message content.
+                tempContent = re.sub(emoji_pattern, str(emoji), currStr)
 
         if len(msg.content) < len(tempContent):
             await msg.delete()
