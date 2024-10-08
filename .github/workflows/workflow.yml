@@ -1,0 +1,43 @@
+name: CI workflow
+on: 
+  push:
+    branches: ["main", "testWorkflow"]
+  pull_request:
+    branches: ["main", "testWorkflow"]
+
+defaults:
+  run:
+    working-directory: ./lab2/TDD
+
+jobs: 
+  build: 
+    runs-on: ubuntu-latest
+    container: python:3.9-slim
+
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint with flake8
+        run: flake8 src --count --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Run unit tests with pytest
+        run: pytest -v --tb=short --color=yes --cov=src --cov-report=term-missing
