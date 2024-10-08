@@ -71,24 +71,23 @@ lstTokens = ["fake_token1",
                 "fake_token2",
                 "fake_token3"]
 
-dictfiles = dict()
+# Function call to count files
+dictfiles = {}
 countfiles(dictfiles, lstTokens, repo)
-print('Total number of source files: ' + str(len(dictfiles)))
+print(f'Total number of source files: {len(dictfiles)}')
 
+# Output file setup
 file = repo.split('/')[1]
-fileOutput = 'data/file_source' + file + '.csv'
-rows = ["Filename", "Touches"]
-fileCSV = open(fileOutput, 'w')
-writer = csv.writer(fileCSV)
-writer.writerow(rows)
+fileOutput = f'data/file_source{file}.csv'
 
-bigcount = None
-bigfilename = None
-for filename, count in dictfiles.items():
-    rows = [filename, count]
-    writer.writerow(rows)
-    if bigcount is None or count > bigcount:
-        bigcount = count
-        bigfilename = filename
-fileCSV.close()
-print('The file ' + bigfilename + ' has been touched ' + str(bigcount) + ' times.')
+with open(fileOutput, 'w', newline='') as fileCSV:
+    writer = csv.writer(fileCSV)
+    writer.writerow(["Filename", "Touches"])
+
+    # Find the file with the maximum touches while writing rows to CSV
+    bigfilename, bigcount = max(dictfiles.items(), key=lambda x: x[1], default=(None, None))
+    
+    for filename, count in dictfiles.items():
+        writer.writerow([filename, count])
+
+print(f'The file {bigfilename} has been touched {bigcount} times.')
