@@ -98,21 +98,22 @@ def test_from_dict():
 
 
 def test_update():
-    rand = randrange(0, len(ACCOUNT_DATA))      # Generate a random index
-    data = ACCOUNT_DATA[rand]       # Get a random account
+    # Generate a random account instance
+    rand = randrange(0, len(ACCOUNT_DATA))  # Generate a random index
+    data = ACCOUNT_DATA[rand]               # Get a random account
     account = Account(**data)
 
-    # Test exception with empty id
-    try:
+    # Test for exception when updating with empty id
+    account.id = None  # Ensure id is empty
+    with pytest.raises(DataValidationError) as exc_info:
         account.update()
-    except DataValidationError as error:
-        assert str(error) == "Update called with empty ID field"
+    assert str(exc_info.value) == "Update called with empty ID field"
 
-    # Get a random id and do an update???
+    # Test successful update with valid id and name
     account.id = 59498
     account.name = "new name"
-
-    account.update()
+    
+    account.update()  # Should not raise an exception
 
 def test_delete_and_find():
     rand = randrange(0, len(ACCOUNT_DATA))      # Generate a random index
