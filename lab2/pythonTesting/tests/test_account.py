@@ -98,34 +98,46 @@ def test_from_dict():
 
 
 def test_update():
-    rand = randrange(0, len(ACCOUNT_DATA))      # Generate a random index
-    data = ACCOUNT_DATA[rand]       # Get a random account
+    # Generate a random account instance
+    rand = randrange(0, len(ACCOUNT_DATA))  # Generate a random index
+    data = ACCOUNT_DATA[rand]               # Get a random account
     account = Account(**data)
+    account.create()  # Create the account to generate an ID
 
-    # Test exception with empty id
-    try:
+    # Test for exception when updating with empty id
+    account.id = None  # Ensure id is empty
+    with pytest.raises(DataValidationError) as exc_info:
         account.update()
-    except DataValidationError as error:
-        assert str(error) == "Update called with empty ID field"
+    assert str(exc_info.value) == "Update called with empty ID field"
 
-    # Get a random id and do an update???
-    account.id = 59498
+    # Test successful update with valid id and name
+    account.id = Account.all()[0].id  # Dynamically assign the valid ID
     account.name = "new name"
+    account.update()  # Should not raise an exception
 
-    account.update()
+    # Fetch the updated account from the database and assert the change
+    updated_account = Account.find(account.id)
+    assert updated_account.name == "new name"
 
 def test_delete_and_find():
-    rand = randrange(0, len(ACCOUNT_DATA))      # Generate a random index
-    data = ACCOUNT_DATA[rand]       # Get a random account
+    rand = randrange(0, len(ACCOUNT_DATA))  # Generate a random index
+    data = ACCOUNT_DATA[rand]               # Get a random account
     account = Account(**data)
+    account.create()
 
-    all_Accounts = Account.all()
+    all_accounts = Account.all()
 
     # Ensure that our found account is correct
-    assert None == Account.find(1)
+    assert Account.find(1) is None
 
-    # A valid account is found. Delete it and ensure it's deleted
-    try:
-        account.delete()
-    except Exception as error:
-        print("error: %s" % error)
+    # Ensure the account was successfully created
+    assert len(all_accounts) == 1
+
+    # Delete the account and ensure it's deleted
+    account.delete()
+
+    # Ensure the account can no longer be found
+    assert Account.find(account.id) is None
+
+    # Ensure the number of accounts after deletion is 0
+    assert len(Account.all()) == 0
