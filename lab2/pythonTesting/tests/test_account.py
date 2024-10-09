@@ -73,28 +73,62 @@ def test_to_dict():
     account.create()
 
 def test_from_dict():
-    rand = randrange(0, len(ACCOUNT_DATA))      # Generate a random index
-    data = ACCOUNT_DATA[rand]       # Get a random account
-    account = Account(**data)
+    """
+    Test the `from_dict` method of the `Account` class.
+    
+    This test ensures that the `from_dict` method properly updates an `Account` object
+    based on a dictionary of attributes. It also tests that the account is correctly 
+    created and the values are set as expected.
 
-    now = datetime.datetime.now()
+    Steps:
+    1. A random account data is selected from `ACCOUNT_DATA` (assuming it's a list of 
+       dictionaries or objects containing account-related info).
+    2. An `Account` instance is created from the selected data.
+    3. A new dictionary (`dict`) is defined with updated account attributes, including
+       'name', 'email', 'phone_number', 'disabled', and 'date_joined'.
+    4. The `from_dict` method is called to update the `Account` instance with the new
+       data from the dictionary.
+    5. The `create` method is called to save the updated account.
+    6. Assertions are made to ensure the account's attributes match the values in the
+       dictionary after the update.
 
+    Assumptions:
+    - The `ACCOUNT_DATA` variable contains account information, and an account can be
+      retrieved from it.
+    - The `from_dict` method correctly updates account attributes.
+    - The `create` method performs the necessary steps to finalize or save the account.
+    - The `Account` class contains `name`, `email`, `phone_number`, `disabled`, and 
+      `date_joined` attributes.
+    """
+    
+    rand = randrange(0, len(ACCOUNT_DATA))  # Generate a random index to pick a random account from ACCOUNT_DATA
+    data = ACCOUNT_DATA[rand]  # Retrieve the account data at the random index
+    account = Account(**data)  # Initialize an Account object with the retrieved data
+    
+    now = datetime.datetime.now()  # Get the current time for the 'date_joined' field
+
+    # Define a dictionary with updated account attributes
     dict = {
-        'name' : 'account_Name',
+        'name': 'account_Name',
         'email': 'account_Email',
-        'phone_number' : '7021234567',
-        'disabled' : True,
-        'date_joined' : now
+        'phone_number': '7021234567',
+        'disabled': True,
+        'date_joined': now
     }
 
+    # Update the account with values from the dictionary
     account.from_dict(dict)
+    
+    # Call the account creation method (assumed to persist or initialize the account)
     account.create()
 
+    # Assert that the account attributes have been correctly updated
     assert account.name == 'account_Name'
     assert account.email == 'account_Email'
     assert account.phone_number == '7021234567'
     assert account.disabled == True
     assert account.date_joined == now
+
 
 
 def test_update():
